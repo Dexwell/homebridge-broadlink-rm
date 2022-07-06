@@ -42,6 +42,12 @@ class DoorAccessory extends BroadlinkRMAccessory {
       this.autoStopPromise.cancel();
       this.autoStopPromise = null;
     }
+
+    if (this.autoCloseTimeoutPromise) {
+      this.autoCloseTimeoutPromise.cancel();
+      this.autoCloseTimeoutPromise = null
+    }
+
   }
 
   // User requested a specific position or asked the door to be open or closed
@@ -132,6 +138,7 @@ class DoorAccessory extends BroadlinkRMAccessory {
   async checkOpenOrCloseCompletely () {
     const { data, logLevel, host, log, name, serviceManager, state } = this;
     const { openCompletely, closeCompletely } = data;
+    let { autoCloseDelay } = config;
 
     // Completely Close
     if (state.targetPosition === 0 && closeCompletely) {
@@ -149,6 +156,16 @@ class DoorAccessory extends BroadlinkRMAccessory {
       serviceManager.setCharacteristic(Characteristic.CurrentPosition, state.targetPosition);
 
       await this.performSend(openCompletely);
+      
+      if (autoCloseDelay) {
+        log(`${name} automatically closing in ${autoCloseDelay}s`);
+        this.autoCloseTimeoutPromise = delayForDuration(autoCloseDelay);
+        await this.autoCloseTimeoutPromise;
+  
+        serviceManager.setCharacteristic(Characteristic.TargetPosition, 0);
+        serviceManager.setCharacteristic(Characteristic.CurrentPosition, 0);
+        // this.lock()
+      }
 
       this.stopDoor();
 
