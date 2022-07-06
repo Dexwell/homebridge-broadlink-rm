@@ -1,5 +1,6 @@
 const AirCon = require('./aircon');
 const AirPurifier = require('./air-purifier');
+const Door = require('./door');
 const HumidifierDehumidifier = require('./humidifier-dehumidifier');
 const LearnCode = require('./learnCode');
 const Outlet = require('./outlet');
@@ -22,6 +23,7 @@ const HeaterCooler = require('./heater-cooler');
 module.exports = {
   AirCon,
   AirPurifier,
+  Door,
   HumidifierDehumidifier,
   LearnCode,
   Switch,
