@@ -136,7 +136,7 @@ class DoorAccessory extends BroadlinkRMAccessory {
   }
 
   async checkOpenOrCloseCompletely () {
-    const { data, logLevel, host, log, name, serviceManager, state } = this;
+    const { config, data, logLevel, host, log, name, serviceManager, state } = this;
     const { openCompletely, closeCompletely } = data;
     let { autoCloseDelay } = config;
 
